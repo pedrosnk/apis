@@ -1,0 +1,5 @@
+.virtualenv/
+dist/
+*.egg
+*.egg-info
+*.swp
