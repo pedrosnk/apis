@@ -5,6 +5,7 @@ from tornado.web import RequestHandler
 
 from handlers.healthcheck import HealthcheckHandler
 from storage.mongo import MongoStorage
+from storage.redis import RedisStorage
 
 
 class MainHandler(RequestHandler):
@@ -13,11 +14,15 @@ class MainHandler(RequestHandler):
 
 
 def make_app():
-    mongo_storage = MongoStorage()
+    mongo_db = MongoStorage()
+    redis_db = RedisStorage()
     return tornado.web.Application([
         ('/', MainHandler),
         ('/healthcheck', HealthcheckHandler),
-    ], mongo_storage=mongo_storage)
+    ],
+        mongo_db=mongo_db,
+        redis_db=redis_db,
+    )
 
 
 if __name__ == '__main__':
