@@ -4,6 +4,8 @@ import tornado.ioloop
 from tornado.web import RequestHandler
 
 from handlers.healthcheck import HealthcheckHandler
+from storage.mongo import MongoStorage
+
 
 class MainHandler(RequestHandler):
     def get(self):
@@ -11,10 +13,11 @@ class MainHandler(RequestHandler):
 
 
 def make_app():
+    mongo_storage = MongoStorage()
     return tornado.web.Application([
         ('/', MainHandler),
         ('/healthcheck', HealthcheckHandler),
-    ])
+    ], mongo_storage=mongo_storage)
 
 
 if __name__ == '__main__':
