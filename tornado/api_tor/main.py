@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
 
 import tornado.ioloop
-import tornado.web
+from tornado.web import RequestHandler
 
-class MainHandler(tornado.web.RequestHandler):
+from handlers.healthcheck import HealthcheckHandler
+
+class MainHandler(RequestHandler):
     def get(self):
-        self.write('Hello, World')
+        self.write('Hello To api')
 
 
 def make_app():
     return tornado.web.Application([
-        ('/', MainHandler)
+        ('/', MainHandler),
+        ('/healthcheck', HealthcheckHandler),
     ])
 
 
