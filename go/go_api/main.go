@@ -33,7 +33,7 @@ func main() {
 		mongodb: NewMongoDbConnection(),
 		redisdb: NewRedisConnection(),
 	}
-	http.HandleFunc("/healtchcheck", s.healthcheck)
+	http.HandleFunc("/healthcheck", s.healthcheck)
 	fmt.Println("initilize App on port 8888")
 	http.ListenAndServe(":8888", nil)
 }
