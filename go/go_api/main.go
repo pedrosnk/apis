@@ -11,15 +11,18 @@ import (
 
 type Server struct {
 	mongodb *MongoDB
+	redisdb *RedisDB
 }
 
 type healthcheckRes struct {
 	mongodb string `json:"mongodb"`
+	redisdb string `json:"redisdb"`
 }
 
 func (s *Server) healthcheck(w http.ResponseWriter, r *http.Request) {
 	healthcheck := &healthcheckRes{
 		mongodb: s.mongodb.Ping(),
+		redisdb: s.redisdb.Ping(),
 	}
 	hcString, _ := json.Marshal(healthcheck)
 	io.WriteString(w, string(hcString))
@@ -28,6 +31,7 @@ func (s *Server) healthcheck(w http.ResponseWriter, r *http.Request) {
 func main() {
 	s := &Server{
 		mongodb: NewMongoDbConnection(),
+		redisdb: NewRedisConnection(),
 	}
 	http.HandleFunc("/healtchcheck", s.healthcheck)
 	fmt.Println("initilize App on port 8888")
