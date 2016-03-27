@@ -15,14 +15,23 @@ type Server struct {
 }
 
 type healthcheckRes struct {
-	mongodb string `json:"mongodb"`
-	redisdb string `json:"redisdb"`
+	Mongodb string `json:"mongodb"`
+	Redisdb string `json:"redisdb"`
 }
 
 func (s *Server) healthcheck(w http.ResponseWriter, r *http.Request) {
+	pingRedis := make(chan string, 1)
+	pingMongo := make(chan string, 1)
+	go func() {
+		pingRedis <- s.redisdb.Ping()
+	}()
+	go func() {
+		pingMongo <- s.mongodb.Ping()
+	}()
+
 	healthcheck := &healthcheckRes{
-		mongodb: s.mongodb.Ping(),
-		redisdb: s.redisdb.Ping(),
+		Mongodb: <-pingMongo,
+		Redisdb: <-pingRedis,
 	}
 	hcString, _ := json.Marshal(healthcheck)
 	io.WriteString(w, string(hcString))

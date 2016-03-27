@@ -1,22 +1,23 @@
 package main
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
+type hcResponse struct {
+	Status string `json:"status"`
+}
+
 func hcHandler(c *gin.Context) {
-	workingMessage := map[string]string{
-		"status": "WORKING",
-	}
+	workingMessage := hcResponse{Status: "WORKING"}
 	c.JSON(http.StatusOK, workingMessage)
 }
 
 func makeRoutes() *gin.Engine {
 	r := gin.Default()
 
-	r.GET("/", hcHandler)
+	r.GET("/healthcheck", hcHandler)
 
 	return r
 }
