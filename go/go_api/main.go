@@ -3,11 +3,26 @@ package main
 import (
 	. "./db/mongo"
 	. "./db/redis"
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
+	"os/exec"
 )
+
+var CloudCode string = `function() {
+		var leftpad = (str, len) => {
+			str = String(str)
+			var i = -1
+			len = len - str.length
+			while (++i < len) {
+				str = '#' + str
+			}
+			return str
+		}
+		return leftpad(message, 10)
+}()`
 
 type Server struct {
 	mongodb *MongoDB
@@ -45,6 +60,23 @@ func (s *Server) handleSchema(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "ok")
 }
 
+func (s *Server) handleCCCmdRunner(w http.ResponseWriter, r *http.Request) {
+	messageJson := map[string]string{"message": "foobar"}
+	codeContext, _ := json.Marshal(messageJson)
+	cmd := exec.Command("node",
+		"../cc_runner/runner.js",
+		CloudCode,
+		string(codeContext),
+	)
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	err := cmd.Run()
+	if err != nil {
+		fmt.Println("error running cloud code")
+	}
+	io.WriteString(w, out.String())
+}
+
 func main() {
 	s := &Server{
 		mongodb: NewMongoDbConnection(),
@@ -52,6 +84,7 @@ func main() {
 	}
 	http.HandleFunc("/healthcheck", s.healthcheck)
 	http.HandleFunc("/item-schemas", s.handleSchema)
+	http.HandleFunc("/run-cc", s.handleCCCmdRunner)
 	fmt.Println("initilize App on port 8888")
 	http.ListenAndServe(":8888", nil)
 }
