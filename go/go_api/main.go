@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os/exec"
 )
@@ -60,6 +61,23 @@ func (s *Server) handleSchema(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "ok")
 }
 
+func (s *Server) handleCCCloud(w http.ResponseWriter, r *http.Request) {
+	messageJson := map[string]string{"message": "foobar"}
+	bodyJsonMapped, _ := json.Marshal(map[string]interface{}{
+		"code":    CloudCode,
+		"context": messageJson,
+	})
+
+	req, _ := http.NewRequest("POST", "http://localhost:5000/cc-run", bytes.NewBuffer(bodyJsonMapped))
+	req.Header.Set("Content-Type", "application/json")
+	client := &http.Client{}
+	resp, _ := client.Do(req)
+
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	io.WriteString(w, string(body))
+}
+
 func (s *Server) handleCCCmdRunner(w http.ResponseWriter, r *http.Request) {
 	messageJson := map[string]string{"message": "foobar"}
 	codeContext, _ := json.Marshal(messageJson)
@@ -84,7 +102,8 @@ func main() {
 	}
 	http.HandleFunc("/healthcheck", s.healthcheck)
 	http.HandleFunc("/item-schemas", s.handleSchema)
-	http.HandleFunc("/run-cc", s.handleCCCmdRunner)
+	http.HandleFunc("/cmd-cc", s.handleCCCmdRunner)
+	http.HandleFunc("/cloud-cc", s.handleCCCloud)
 	fmt.Println("initilize App on port 8888")
 	http.ListenAndServe(":8888", nil)
 }

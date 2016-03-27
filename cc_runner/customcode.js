@@ -9,7 +9,7 @@ module.exports = (code, context) => {
   var sandbox
   if (typeof context == "object") {
     sandbox = context 
-  }else if (typeof context == "string") {
+  } else if (typeof context == "string") {
     sandbox = JSON.parse(context)
   } else {
     sandbox = {}
