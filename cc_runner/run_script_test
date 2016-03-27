@@ -1,0 +1,13 @@
+node ../cc_runner/runner.js "function() {
+               var leftpad = (str, len) => {
+               str = String(str)
+               var i = -1
+               len = len - str.length
+               while (++i < len) {
+               str = '#' + str
+               }
+               return str
+               }
+
+               return leftpad(message, 10)
+               }()" '{"message": "foobar"}'
