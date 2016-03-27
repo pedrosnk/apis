@@ -1,3 +1,3 @@
 
 run:
-	go run lib/main.go
+	go run lib/**
