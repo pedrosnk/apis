@@ -49,8 +49,7 @@ func (s *Server) healthcheck(w http.ResponseWriter, r *http.Request) {
 		Mongodb: <-pingMongo,
 		Redisdb: <-pingRedis,
 	}
-	hcString, _ := json.Marshal(healthcheck)
-	io.WriteString(w, string(hcString))
+	json.NewEncoder(w).Encode(healthcheck)
 }
 
 func (s *Server) handleSchema(w http.ResponseWriter, r *http.Request) {

@@ -10,7 +10,7 @@ from storage.redis import RedisStorage
 
 class MainHandler(RequestHandler):
     def get(self):
-        self.write('Hello To api')
+        self.write({"status": "WORKING"})
 
 
 def make_app():
