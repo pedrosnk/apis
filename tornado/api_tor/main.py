@@ -1,16 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import tornado.ioloop
-from tornado.web import RequestHandler
 
 from handlers.healthcheck import HealthcheckHandler
+from handlers.main import MainHandler
+from handlers.item_schema import ItemSchemaPostHandler
 from storage.mongo import MongoStorage
 from storage.redis import RedisStorage
-
-
-class MainHandler(RequestHandler):
-    def get(self):
-        self.write({"status": "WORKING"})
 
 
 def make_app():
@@ -19,6 +15,7 @@ def make_app():
     return tornado.web.Application([
         ('/', MainHandler),
         ('/healthcheck', HealthcheckHandler),
+        (r'/item-schemas', ItemSchemaPostHandler),
     ],
         mongo_db=mongo_db,
         redis_db=redis_db,
