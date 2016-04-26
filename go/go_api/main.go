@@ -94,6 +94,12 @@ func (s *Server) handleCCCmdRunner(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, out.String())
 }
 
+func (s *Server) handleCCRegistryRunner(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
+	body, _ := ioutil.ReadAll(r.Body)
+	io.WriteString(w, string(body))
+}
+
 func main() {
 	s := &Server{
 		mongodb: NewMongoDbConnection(),
@@ -103,6 +109,7 @@ func main() {
 	http.HandleFunc("/item-schemas", s.handleSchema)
 	http.HandleFunc("/cmd-cc", s.handleCCCmdRunner)
 	http.HandleFunc("/cloud-cc", s.handleCCCloud)
+	http.HandleFunc("/registry-cc", s.handleCCRegistryRunner)
 	fmt.Println("initilize App on port 8888")
 	http.ListenAndServe(":8888", nil)
 }
