@@ -1,7 +1,11 @@
 class HealthcheckController < ApplicationController
 
   def index
-    render json: { status: "working" }
+    redis = Redis.new
+    render json: {
+      status: "working",
+      redis: redis.ping
+    }
   end
 
 end
