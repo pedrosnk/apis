@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :valid_item_schema, class: ItemSchema do
+  factory :item_schema do
     properties do
       {'field1' => { 'type' =>'string' } }
     end
@@ -9,5 +9,9 @@ FactoryGirl.define do
     description ''
     collection_name "genCollection"
     required ['field1']
+
+    factory :valid_item_schema do
+    end
+
   end
 end
