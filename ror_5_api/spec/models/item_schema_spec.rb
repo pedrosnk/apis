@@ -2,11 +2,10 @@ require 'rails_helper'
 
 RSpec.describe ItemSchema, type: :model do
 
-  describe 'validates json schema' do
-    it 'with an valid item schema' do
-      item_schema = FactoryGirl.build :valid_item_schema
-      expect(item_schema).to be_valid
-    end
+  describe '#valid?' do
+    subject { FactoryGirl.build :item_schema }
+
+    it { expect(subject).to be_valid }
   end
 
 end
