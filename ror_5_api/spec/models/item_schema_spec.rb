@@ -12,9 +12,9 @@ RSpec.describe ItemSchema, type: :model do
     subject { FactoryGirl.build :item_schema }
 
     let :json_schema do
-      { 
+      {
         '$schema' => subject[:schema],
-        'aditionalProperties' => subject[:aditional_properties],
+        'additionalProperties' => subject[:additional_properties],
         'collectionName' => subject[:collection_name],
         'type' => subject[:type],
         'required' => subject[:required],

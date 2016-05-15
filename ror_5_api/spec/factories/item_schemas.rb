@@ -5,7 +5,7 @@ FactoryGirl.define do
     end
     schema 'http://json-schema.org/draft-04/schema#'
     type 'object'
-    aditional_properties false
+    additional_properties false
     description ''
     collection_name "genCollection"
     required ['field1']

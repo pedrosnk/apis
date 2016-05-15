@@ -46,6 +46,8 @@ class ItemSchemasController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def item_schema_params
-      params.require(:item_schema).permit(:properties, :schema, :type, :aditionalProperties, :description, :collection_name)
+      params.permit(:properties, :schema, :type, :additionalProperties,
+                    :description, :collection_name, :required)
+
     end
 end
